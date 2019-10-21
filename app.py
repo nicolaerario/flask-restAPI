@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from flask_marshmallow import Marshmallow
@@ -65,6 +65,22 @@ def not_found():
 def domains():
     domains_list = Domain.query.all()
     return jsonify(domains_schema.dump(domains_list))
+
+
+@app.route("/register", methods=["POST"])
+def register():
+    email = request.form["email"]
+    check_registration = User.query.filter_by(email=email).first()
+    if check_registration:
+        return jsonify(message="That email already exist!"), 409
+    else:
+        first_name = request.form["first_name"]
+        last_name = request.form["last_name"]
+        password = request.form["password"]
+        user = User(first_name=first_name, last_name=last_name, password=password)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify(message="User created successfully!"), 201
 
 
 # Database models and schema
