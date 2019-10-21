@@ -1,2 +1,2 @@
 # set development env with debug and reload on
-FLASK_ENV = 'development'
+FLASK_ENV=development
