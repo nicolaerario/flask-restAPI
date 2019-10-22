@@ -136,6 +136,21 @@ def add_domain():
     return jsonify(message="You added a new domain!"), 201
 
 
+@app.route("/update_domain", methods=["PUT"])
+@jwt_required
+def update_domain():
+    domain_id = int(request.form["domain_id"])
+    domain = Domain.query.filter_by(domain_id=domain_id).first()
+    if domain:
+        domain.domain_name = request.form["domain_name"]
+        domain.domain_type = request.form["domain_name"]
+        domain.registered_on = request.form["registered_on"]
+        db.session.commit()
+        return jsonify(message="Domain updated!"), 202
+    else:
+        return jsonify(message="This domain doesn't exist!"), 404
+
+
 # Database models and schema
 class User(db.Model):
     __tablename__ = "users"
