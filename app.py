@@ -118,6 +118,7 @@ def domain_details(domain_id: int):
 
 
 @app.route("/add_domain", methods=["POST"])
+@jwt_required
 def add_domain():
     domain_name = request.form["domain_name"]
     domain_exist = Domain.query.filter_by(domain_name=domain_name).first()
