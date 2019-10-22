@@ -151,6 +151,18 @@ def update_domain():
         return jsonify(message="This domain doesn't exist!"), 404
 
 
+@app.route("/remove_domain/<int:domain_id>", methods=["DELETE"])
+@jwt_required
+def remove_domain(domain_id: int):
+    domain = Domain.query.filter_by(domain_id=domain_id).first()
+    if domain:
+        db.session.delete(domain)
+        db.session.commit()
+        return jsonify(message="The domain is deleted!"), 202
+    else:
+        return jsonify(message="This domain doesn't exist"), 404
+
+
 # Database models and schema
 class User(db.Model):
     __tablename__ = "users"
