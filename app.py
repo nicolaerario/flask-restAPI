@@ -117,6 +117,24 @@ def domain_details(domain_id: int):
         return jsonify(message="That domain doesn't exist!"), 404
 
 
+@app.route("/add_domain", methods=["POST"])
+def add_domain():
+    domain_name = request.form["domain_name"]
+    domain_exist = Domain.query.filter_by(domain_name=domain_name).first()
+    if domain_exist:
+        return jsonify(message="That domain is already in the db!"), 409
+    else:
+        domain_type = request.form["domain_type"]
+        registered_on = request.form["registered_on"]
+
+    new_domain = Domain(
+        domain_name=domain_name, domain_type=domain_type, registered_on=registered_on
+    )
+    db.session.add(new_domain)
+    db.session.commit()
+    return jsonify(message="You added a new domain!"), 201
+
+
 # Database models and schema
 class User(db.Model):
     __tablename__ = "users"
