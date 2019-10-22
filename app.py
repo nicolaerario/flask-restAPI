@@ -107,6 +107,16 @@ def login():
         return jsonify(message="Bad email or password!"), 401
 
 
+@app.route("/domain_details/<int:domain_id>", methods=["GET"])
+def domain_details(domain_id: int):
+    domain = Domain.query.filter_by(domain_id=domain_id).first()
+    if domain:
+        result = domain_schema.dump(domain)
+        return jsonify(result)
+    else:
+        return jsonify(message="That domain doesn't exist!"), 404
+
+
 # Database models and schema
 class User(db.Model):
     __tablename__ = "users"
